@@ -129,40 +129,32 @@ h1 {
   margin-bottom: 10px;
 }
 
-.entry {
-  padding: 9px 0;
-  border-bottom: 1px solid rgba(255,255,255,.12);
-}
-
-.entry:last-child {
-  border-bottom: none;
-}
-
-.entry-title {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 3px;
-}
-
-.entry-detail {
-  font-size: 11px;
-  line-height: 1.4;
-  opacity: .55;
-}
-
-.empty {
+.empty,
+.warning {
   font-size: 13px;
   line-height: 1.5;
   opacity: .55;
 }
 
-.warning {
+.status-open {
+  font-size: 11px;
+  opacity: .65;
+}
+
+.status-complete {
+  font-size: 11px;
+  opacity: .4;
+}
+
+.followup-title {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.followup-detail {
   font-size: 12px;
   line-height: 1.45;
-  opacity: .6;
+  opacity: .55;
 }
 </style>
 </head>
@@ -187,7 +179,7 @@ h1 {
 </section>
 
 
-<!-- NETWORKING HOME -->
+<!-- NETWORKING HUB -->
 
 <section id="networking" class="hud">
   <div class="brand">NETWORKING</div>
@@ -199,20 +191,36 @@ h1 {
     <div class="item">All Follow Ups</div>
     <div class="item">← Back</div>
   </div>
+</section>
 
-  <div class="hint">↑ ↓ Navigate • Pinch to Select</div>
+
+<!-- EVENT TYPE -->
+
+<section id="eventType" class="hud">
+  <div class="brand">NEW EVENT</div>
+  <h1>Event Type</h1>
+  <div class="subtitle">What kind of event are you attending?</div>
+
+  <div class="menu">
+    <div class="item active">Chamber</div>
+    <div class="item">BNI</div>
+    <div class="item">Client Event</div>
+    <div class="item">Community</div>
+    <div class="item">Other</div>
+    <div class="item">Quick Event</div>
+    <div class="item">← Back</div>
+  </div>
 </section>
 
 
 <!-- ACTIVE EVENT -->
 
 <section id="event" class="hud">
-  <div class="brand">ACTIVE EVENT</div>
+  <div id="eventBrand" class="brand">ACTIVE EVENT</div>
   <h1 id="eventTitle">Event</h1>
   <div id="eventTime" class="subtitle"></div>
 
   <div class="stats">
-
     <div class="stat">
       <div id="eventCaptureCount" class="number">0</div>
       <div class="label">CAPTURES</div>
@@ -227,7 +235,6 @@ h1 {
       <div id="eventMeetingCount" class="number">0</div>
       <div class="label">MEETINGS</div>
     </div>
-
   </div>
 
   <div class="menu">
@@ -317,7 +324,6 @@ h1 {
   <h1>Review</h1>
 
   <div class="card">
-
     <div class="row">
       <span class="row-label">Identifier</span>
       <span id="reviewIdentifier" class="row-value"></span>
@@ -337,7 +343,6 @@ h1 {
       <span class="row-label">Next Action</span>
       <span id="reviewAction" class="row-value"></span>
     </div>
-
   </div>
 
   <div class="menu">
@@ -368,13 +373,9 @@ h1 {
 
 <section id="eventFollowups" class="hud">
   <div class="brand">EVENT FOLLOW UPS</div>
-  <h1 id="eventFollowupTitle">Captures</h1>
+  <h1 id="eventFollowupTitle">Follow Ups</h1>
 
-  <div id="eventFollowupList" class="card list-box"></div>
-
-  <div class="menu">
-    <div class="item active">← Back</div>
-  </div>
+  <div id="eventFollowupMenu" class="menu"></div>
 </section>
 
 
@@ -382,12 +383,25 @@ h1 {
 
 <section id="allFollowups" class="hud">
   <div class="brand">ALL FOLLOW UPS</div>
-  <h1>Across Events</h1>
+  <h1>Outstanding</h1>
 
-  <div id="allFollowupList" class="card list-box"></div>
+  <div id="allFollowupMenu" class="menu"></div>
+</section>
 
-  <div class="menu">
-    <div class="item active">← Event Hub</div>
+
+<!-- FOLLOW UP DETAIL -->
+
+<section id="followupDetail" class="hud">
+  <div class="brand">FOLLOW UP</div>
+  <h1 id="followupDetailTitle">Capture</h1>
+
+  <div class="card">
+    <div id="followupDetailBody"></div>
+  </div>
+
+  <div id="followupDetailMenu" class="menu">
+    <div class="item active">Mark Complete</div>
+    <div class="item">← Back</div>
   </div>
 </section>
 
@@ -399,7 +413,6 @@ h1 {
   <h1 id="summaryTitle">Event</h1>
 
   <div class="card">
-
     <div class="row">
       <span class="row-label">Captures</span>
       <span id="summaryCaptures" class="row-value">0</span>
@@ -421,6 +434,11 @@ h1 {
     </div>
 
     <div class="row">
+      <span class="row-label">Open Follow Ups</span>
+      <span id="summaryOpen" class="row-value">0</span>
+    </div>
+
+    <div class="row">
       <span class="row-label">Started</span>
       <span id="summaryStarted" class="row-value"></span>
     </div>
@@ -429,11 +447,10 @@ h1 {
       <span class="row-label">Ended</span>
       <span id="summaryEnded" class="row-value">Active</span>
     </div>
-
   </div>
 
   <div class="menu">
-    <div class="item active">View Captures</div>
+    <div class="item active">View Follow Ups</div>
     <div class="item">← Back</div>
   </div>
 </section>
@@ -446,8 +463,8 @@ h1 {
   <h1>Finish Event?</h1>
 
   <div class="warning">
-    This will close the active event and save its ending time.
-    Your captures will remain available in Recent Events.
+    This closes the active event and records the ending time.
+    Captures and follow-up history remain saved.
   </div>
 
   <div class="menu" style="margin-top:16px;">
@@ -485,11 +502,12 @@ h1 {
 
 <script>
 
-/* ---------------- STATE ---------------- */
+/* ---------- STATE ---------- */
 
 const screenNames = [
   "home",
   "networking",
+  "eventType",
   "event",
   "identifier",
   "relationship",
@@ -499,6 +517,7 @@ const screenNames = [
   "saved",
   "eventFollowups",
   "allFollowups",
+  "followupDetail",
   "summary",
   "endEvent",
   "complete",
@@ -513,8 +532,12 @@ screenNames.forEach(name => {
 
 let currentScreen = "home";
 let selected = 0;
+
 let activeEventId = null;
 let viewedEventId = null;
+
+let selectedFollowup = null;
+let followupReturnScreen = "eventFollowups";
 
 let capture = {
   identifier: "",
@@ -524,7 +547,7 @@ let capture = {
 };
 
 
-/* ---------------- STORAGE ---------------- */
+/* ---------- STORAGE ---------- */
 
 function getEvents() {
   try {
@@ -544,7 +567,7 @@ function setEvents(events) {
 }
 
 
-/* ---------------- TIME ---------------- */
+/* ---------- TIME ---------- */
 
 function formatTime(value) {
 
@@ -568,15 +591,16 @@ function formatDate(value) {
 }
 
 
-/* ---------------- EVENTS ---------------- */
+/* ---------- EVENT CREATION ---------- */
 
-function startNewEvent() {
+function startNewEvent(type) {
 
   const events = getEvents();
 
   const event = {
     id: Date.now(),
     number: events.length + 1,
+    type: type,
     started: new Date().toISOString(),
     ended: null,
     captures: []
@@ -588,7 +612,6 @@ function startNewEvent() {
   activeEventId = event.id;
   viewedEventId = event.id;
 
-  updateEventScreen();
   showScreen("event");
 }
 
@@ -601,11 +624,16 @@ function getEventById(id) {
 }
 
 
+/* ---------- ACTIVE EVENT ---------- */
+
 function updateEventScreen() {
 
   const event = getEventById(activeEventId);
 
   if (!event) return;
+
+  document.getElementById("eventBrand")
+    .textContent = event.type.toUpperCase();
 
   document.getElementById("eventTitle")
     .textContent = "Event #" + event.number;
@@ -633,6 +661,8 @@ function updateEventScreen() {
 }
 
 
+/* ---------- END EVENT ---------- */
+
 function endCurrentEvent() {
 
   const events = getEvents();
@@ -654,7 +684,7 @@ function endCurrentEvent() {
 
   document.getElementById("completeTitle")
     .textContent =
-      "Event #" + finished.number + " Saved";
+      finished.type + " • Event #" + finished.number;
 
   document.getElementById("completeDetails")
     .textContent =
@@ -670,7 +700,7 @@ function endCurrentEvent() {
 }
 
 
-/* ---------------- CAPTURES ---------------- */
+/* ---------- SAVE CAPTURE ---------- */
 
 function saveCapture() {
 
@@ -684,17 +714,25 @@ function saveCapture() {
 
   const event = events[index];
 
+  const noAction =
+    capture.action === "No Action";
+
   const newCapture = {
     number: event.captures.length + 1,
     identifier: capture.identifier,
     relationship: capture.relationship,
     opportunity: capture.opportunity,
     action: capture.action,
-    created: new Date().toISOString()
+    created: new Date().toISOString(),
+
+    completed: noAction,
+    completedAt:
+      noAction
+        ? new Date().toISOString()
+        : null
   };
 
   event.captures.push(newCapture);
-
   setEvents(events);
 
   document.getElementById("savedTitle")
@@ -703,8 +741,7 @@ function saveCapture() {
 
   document.getElementById("savedDetails")
     .textContent =
-      "Event #" +
-      event.number +
+      event.type +
       " • " +
       newCapture.identifier +
       " • " +
@@ -714,7 +751,44 @@ function saveCapture() {
 }
 
 
-/* ---------------- DISPLAY ---------------- */
+/* ---------- COMPLETE FOLLOW UP ---------- */
+
+function markFollowupComplete() {
+
+  if (!selectedFollowup) return;
+
+  const events = getEvents();
+
+  const eventIndex = events.findIndex(
+    event =>
+      event.id === selectedFollowup.eventId
+  );
+
+  if (eventIndex === -1) return;
+
+  const captureIndex =
+    events[eventIndex].captures.findIndex(
+      item =>
+        item.number === selectedFollowup.captureNumber
+    );
+
+  if (captureIndex === -1) return;
+
+  const item =
+    events[eventIndex].captures[captureIndex];
+
+  item.completed = true;
+  item.completedAt = new Date().toISOString();
+
+  setEvents(events);
+
+  selectedFollowup = null;
+
+  showScreen(followupReturnScreen);
+}
+
+
+/* ---------- SCREEN ---------- */
 
 function showScreen(name) {
 
@@ -736,11 +810,15 @@ function showScreen(name) {
   }
 
   if (name === "eventFollowups") {
-    renderEventCaptures(viewedEventId);
+    renderEventFollowups(viewedEventId);
   }
 
   if (name === "allFollowups") {
     renderAllFollowups();
+  }
+
+  if (name === "followupDetail") {
+    renderFollowupDetail();
   }
 
   if (name === "summary") {
@@ -776,7 +854,7 @@ function updateSelection() {
 }
 
 
-/* ---------------- REVIEW ---------------- */
+/* ---------- REVIEW ---------- */
 
 function updateReview() {
 
@@ -794,61 +872,67 @@ function updateReview() {
 }
 
 
-/* ---------------- EVENT CAPTURES ---------------- */
+/* ---------- EVENT FOLLOW UPS ---------- */
 
-function renderEventCaptures(eventId) {
+function renderEventFollowups(eventId) {
 
   const event = getEventById(eventId);
-  const container =
-    document.getElementById("eventFollowupList");
+
+  const menu =
+    document.getElementById("eventFollowupMenu");
 
   if (!event) {
 
-    container.innerHTML =
-      '<div class="empty">Event not found.</div>';
+    menu.innerHTML =
+      '<div class="item active">← Back</div>';
 
     return;
   }
 
   document.getElementById("eventFollowupTitle")
     .textContent =
-      "Event #" + event.number + " Captures";
+      event.type + " • Event #" + event.number;
 
-  if (event.captures.length === 0) {
+  const openItems =
+    event.captures.filter(
+      item => !item.completed
+    );
 
-    container.innerHTML =
-      '<div class="empty">No captures yet.</div>';
+  if (openItems.length === 0) {
+
+    menu.innerHTML = `
+      <div class="empty">
+        No outstanding follow ups.
+      </div>
+      <div class="item active">← Back</div>
+    `;
 
     return;
   }
 
-  container.innerHTML =
-    event.captures.map(item => `
-      <div class="entry">
-
-        <div class="entry-title">
-          <span>#${item.number} • ${item.identifier}</span>
-          <span>${formatTime(item.created)}</span>
-        </div>
-
-        <div class="entry-detail">
-          ${item.relationship} • ${item.opportunity}
-          <br>
-          Next: ${item.action}
-        </div>
-
+  menu.innerHTML =
+    openItems.map(item => `
+      <div
+        class="item followup-choice"
+        data-event-id="${event.id}"
+        data-capture-number="${item.number}"
+      >
+        #${item.number} • ${item.identifier}
+        • ${item.action}
       </div>
-    `).join("");
+    `).join("") +
+    '<div class="item">← Back</div>';
 }
 
 
-/* ---------------- ALL FOLLOW UPS ---------------- */
+/* ---------- ALL FOLLOW UPS ---------- */
 
 function renderAllFollowups() {
 
   const events = getEvents();
-  const container =
-    document.getElementById("allFollowupList");
+
+  const menu =
+    document.getElementById("allFollowupMenu");
 
   const rows = [];
 
@@ -856,43 +940,113 @@ function renderAllFollowups() {
 
     event.captures.forEach(item => {
 
-      if (item.action !== "No Action") {
+      if (!item.completed) {
 
         rows.push(`
-          <div class="entry">
-
-            <div class="entry-title">
-              <span>
-                E${event.number} • #${item.number} •
-                ${item.identifier}
-              </span>
-
-              <span>
-                ${formatDate(item.created)}
-              </span>
-            </div>
-
-            <div class="entry-detail">
-              ${item.relationship} • ${item.opportunity}
-              <br>
-              Next: ${item.action} •
-              ${formatTime(item.created)}
-            </div>
-
+          <div
+            class="item followup-choice"
+            data-event-id="${event.id}"
+            data-capture-number="${item.number}"
+          >
+            E${event.number} • #${item.number}
+            • ${item.identifier}
+            • ${item.action}
           </div>
         `);
       }
     });
   });
 
-  container.innerHTML =
-    rows.length
-      ? rows.join("")
-      : '<div class="empty">No follow ups yet.</div>';
+  if (rows.length === 0) {
+
+    menu.innerHTML = `
+      <div class="empty">
+        No outstanding follow ups.
+      </div>
+      <div class="item active">← Event Hub</div>
+    `;
+
+    return;
+  }
+
+  menu.innerHTML =
+    rows.join("") +
+    '<div class="item">← Event Hub</div>';
 }
 
 
-/* ---------------- SUMMARY ---------------- */
+/* ---------- FOLLOW UP DETAIL ---------- */
+
+function renderFollowupDetail() {
+
+  if (!selectedFollowup) return;
+
+  const event =
+    getEventById(selectedFollowup.eventId);
+
+  if (!event) return;
+
+  const item =
+    event.captures.find(
+      capture =>
+        capture.number ===
+        selectedFollowup.captureNumber
+    );
+
+  if (!item) return;
+
+  document.getElementById("followupDetailTitle")
+    .textContent =
+      event.type +
+      " • Capture #" +
+      item.number;
+
+  document.getElementById("followupDetailBody")
+    .innerHTML = `
+
+      <div class="followup-title">
+        ${item.identifier} • ${item.relationship}
+      </div>
+
+      <div class="followup-detail">
+        ${formatDate(item.created)}
+        • ${formatTime(item.created)}
+        <br><br>
+
+        Opportunity: ${item.opportunity}
+        <br>
+
+        Next Action: ${item.action}
+        <br>
+
+        Status:
+        ${item.completed ? "Complete" : "Open"}
+      </div>
+    `;
+
+  const menu =
+    document.getElementById("followupDetailMenu");
+
+  if (item.completed) {
+
+    menu.innerHTML =
+      '<div class="item active">← Back</div>';
+
+  } else {
+
+    menu.innerHTML = `
+      <div class="item active">
+        Mark Complete
+      </div>
+      <div class="item">
+        ← Back
+      </div>
+    `;
+  }
+}
+
+
+/* ---------- SUMMARY ---------- */
 
 function renderSummary(eventId) {
 
@@ -915,13 +1069,19 @@ function renderSummary(eventId) {
       item => item.action === "Schedule Meeting"
     ).length;
 
+  const open =
+    event.captures.filter(
+      item => !item.completed
+    ).length;
+
   document.getElementById("summaryTitle")
     .textContent =
-      "Event #" + event.number;
+      event.type +
+      " • Event #" +
+      event.number;
 
   document.getElementById("summaryCaptures")
-    .textContent =
-      event.captures.length;
+    .textContent = event.captures.length;
 
   document.getElementById("summaryProspects")
     .textContent = prospects;
@@ -932,9 +1092,11 @@ function renderSummary(eventId) {
   document.getElementById("summaryMeetings")
     .textContent = meetings;
 
+  document.getElementById("summaryOpen")
+    .textContent = open;
+
   document.getElementById("summaryStarted")
-    .textContent =
-      formatTime(event.started);
+    .textContent = formatTime(event.started);
 
   document.getElementById("summaryEnded")
     .textContent =
@@ -944,11 +1106,12 @@ function renderSummary(eventId) {
 }
 
 
-/* ---------------- RECENT EVENTS ---------------- */
+/* ---------- RECENT EVENTS ---------- */
 
 function renderRecentEvents() {
 
   const events = getEvents();
+
   const menu =
     document.getElementById("recentEventMenu");
 
@@ -958,7 +1121,10 @@ function renderRecentEvents() {
       <div class="empty">
         No networking events saved yet.
       </div>
-      <div class="item active">← Event Hub</div>
+
+      <div class="item active">
+        ← Event Hub
+      </div>
     `;
 
     return;
@@ -968,21 +1134,32 @@ function renderRecentEvents() {
     events.slice().reverse().slice(0, 6);
 
   menu.innerHTML =
-    recent.map(event => `
-      <div
-        class="item event-choice"
-        data-event-id="${event.id}"
-      >
-        ${formatDate(event.started)}
-        • Event #${event.number}
-        • ${event.captures.length} Captures
-      </div>
-    `).join("") +
+    recent.map(event => {
+
+      const open =
+        event.captures.filter(
+          item => !item.completed
+        ).length;
+
+      return `
+        <div
+          class="item event-choice"
+          data-event-id="${event.id}"
+        >
+          ${formatDate(event.started)}
+          • ${event.type}
+          • ${event.captures.length} Captures
+          • ${open} Open
+        </div>
+      `;
+
+    }).join("") +
+
     '<div class="item">← Event Hub</div>';
 }
 
 
-/* ---------------- SELECTION ---------------- */
+/* ---------- SELECTION ---------- */
 
 function selectItem() {
 
@@ -1006,12 +1183,12 @@ function selectItem() {
   }
 
 
-  /* EVENT HUB */
+  /* NETWORKING */
 
   if (currentScreen === "networking") {
 
     if (selected === 0) {
-      startNewEvent();
+      showScreen("eventType");
     }
 
     else if (selected === 1) {
@@ -1022,9 +1199,24 @@ function selectItem() {
       showScreen("allFollowups");
     }
 
-    else if (selected === 3) {
+    else {
       showScreen("home");
     }
+
+    return;
+  }
+
+
+  /* EVENT TYPE */
+
+  if (currentScreen === "eventType") {
+
+    if (selected === 6) {
+      showScreen("networking");
+      return;
+    }
+
+    startNewEvent(choice);
 
     return;
   }
@@ -1039,11 +1231,13 @@ function selectItem() {
     }
 
     else if (selected === 1) {
+
       viewedEventId = activeEventId;
       showScreen("eventFollowups");
     }
 
     else if (selected === 2) {
+
       viewedEventId = activeEventId;
       showScreen("summary");
     }
@@ -1052,7 +1246,7 @@ function selectItem() {
       showScreen("endEvent");
     }
 
-    else if (selected === 4) {
+    else {
       showScreen("networking");
     }
 
@@ -1137,10 +1331,8 @@ function selectItem() {
       saveCapture();
       showScreen("saved");
 
-      return;
-    }
+    } else {
 
-    if (selected === 1) {
       showScreen("action");
     }
 
@@ -1165,10 +1357,12 @@ function selectItem() {
     }
 
     else if (selected === 1) {
+
       showScreen("event");
     }
 
-    else if (selected === 2) {
+    else {
+
       viewedEventId = activeEventId;
       showScreen("eventFollowups");
     }
@@ -1181,10 +1375,32 @@ function selectItem() {
 
   if (currentScreen === "eventFollowups") {
 
-    if (activeEventId === viewedEventId) {
-      showScreen("event");
+    const item = items[selected];
+
+    if (
+      item.classList.contains("followup-choice")
+    ) {
+
+      selectedFollowup = {
+        eventId:
+          Number(item.dataset.eventId),
+
+        captureNumber:
+          Number(item.dataset.captureNumber)
+      };
+
+      followupReturnScreen =
+        "eventFollowups";
+
+      showScreen("followupDetail");
+
     } else {
-      showScreen("summary");
+
+      if (activeEventId === viewedEventId) {
+        showScreen("event");
+      } else {
+        showScreen("summary");
+      }
     }
 
     return;
@@ -1194,7 +1410,54 @@ function selectItem() {
   /* ALL FOLLOW UPS */
 
   if (currentScreen === "allFollowups") {
-    showScreen("networking");
+
+    const item = items[selected];
+
+    if (
+      item.classList.contains("followup-choice")
+    ) {
+
+      selectedFollowup = {
+        eventId:
+          Number(item.dataset.eventId),
+
+        captureNumber:
+          Number(item.dataset.captureNumber)
+      };
+
+      followupReturnScreen =
+        "allFollowups";
+
+      showScreen("followupDetail");
+
+    } else {
+
+      showScreen("networking");
+    }
+
+    return;
+  }
+
+
+  /* FOLLOW UP DETAIL */
+
+  if (currentScreen === "followupDetail") {
+
+    const item = items[selected];
+
+    if (
+      item.textContent
+        .trim()
+        .includes("Mark Complete")
+    ) {
+
+      markFollowupComplete();
+
+    } else {
+
+      showScreen(followupReturnScreen);
+    }
+
     return;
   }
 
@@ -1204,10 +1467,10 @@ function selectItem() {
   if (currentScreen === "summary") {
 
     if (selected === 0) {
-      showScreen("eventFollowups");
-    }
 
-    else {
+      showScreen("eventFollowups");
+
+    } else {
 
       if (activeEventId === viewedEventId) {
         showScreen("event");
@@ -1225,10 +1488,11 @@ function selectItem() {
   if (currentScreen === "endEvent") {
 
     if (selected === 0) {
-      endCurrentEvent();
-    }
 
-    else {
+      endCurrentEvent();
+
+    } else {
+
       showScreen("event");
     }
 
@@ -1241,10 +1505,11 @@ function selectItem() {
   if (currentScreen === "complete") {
 
     if (selected === 0) {
-      showScreen("summary");
-    }
 
-    else {
+      showScreen("summary");
+
+    } else {
+
       showScreen("networking");
     }
 
@@ -1256,14 +1521,14 @@ function selectItem() {
 
   if (currentScreen === "recentEvents") {
 
-    const selectedItem = items[selected];
+    const item = items[selected];
 
     if (
-      selectedItem.classList.contains("event-choice")
+      item.classList.contains("event-choice")
     ) {
 
       viewedEventId =
-        Number(selectedItem.dataset.eventId);
+        Number(item.dataset.eventId);
 
       showScreen("summary");
 
@@ -1277,7 +1542,7 @@ function selectItem() {
 }
 
 
-/* ---------------- INPUT ---------------- */
+/* ---------- INPUT ---------- */
 
 document.addEventListener(
   "keydown",
@@ -1327,7 +1592,7 @@ document.addEventListener(
 );
 
 
-/* ---------------- START ---------------- */
+/* ---------- START ---------- */
 
 updateSelection();
 
