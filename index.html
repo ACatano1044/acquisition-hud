@@ -21,10 +21,14 @@ body {
 .hud {
   width: 100vw;
   height: 100vh;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   padding: 28px;
+}
+
+.hud.active-screen {
+  display: flex;
 }
 
 .brand {
@@ -40,11 +44,11 @@ h1 {
   font-weight: 600;
 }
 
-.subtitle {
-  font-size: 14px;
-  opacity: .5;
-  margin-top: -15px;
-  margin-bottom: 24px;
+.event {
+  font-size: 15px;
+  opacity: .7;
+  margin-top: -14px;
+  margin-bottom: 20px;
 }
 
 .menu {
@@ -72,14 +76,6 @@ h1 {
   opacity: .4;
 }
 
-.screen {
-  display: none;
-}
-
-.screen.active-screen {
-  display: flex;
-}
-
 .stats {
   display: flex;
   gap: 12px;
@@ -105,30 +101,46 @@ h1 {
   opacity: .55;
 }
 
-.event {
-  font-size: 15px;
-  opacity: .7;
-  margin-bottom: 20px;
+.card {
+  padding: 18px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.08);
+  margin-bottom: 12px;
 }
 
-.back {
-  margin-top: 22px;
-  font-size: 13px;
-  opacity: .45;
+.card-title {
+  font-size: 18px;
+  margin-bottom: 7px;
+}
+
+.card-text {
+  font-size: 14px;
+  line-height: 1.45;
+  opacity: .6;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 20px;
+  font-size: 11px;
+  opacity: .6;
 }
 </style>
 </head>
 
 <body>
 
-<!-- MAIN MENU -->
+<!-- HOME -->
 
-<section id="home" class="hud screen active-screen">
+<section id="home" class="hud active-screen">
 
   <div class="brand">A-D</div>
   <h1>Acquisition HUD</h1>
 
-  <div class="menu" id="mainMenu">
+  <div class="menu">
     <div class="item active">Networking</div>
     <div class="item">Prospects</div>
     <div class="item">Meetings</div>
@@ -137,15 +149,15 @@ h1 {
   </div>
 
   <div class="hint">
-    ↑ ↓ Navigate &nbsp; • &nbsp; Enter to Select
+    ↑ ↓ Navigate &nbsp; • &nbsp; Pinch to Select
   </div>
 
 </section>
 
 
-<!-- NETWORKING MODE -->
+<!-- NETWORKING -->
 
-<section id="networking" class="hud screen">
+<section id="networking" class="hud">
 
   <div class="brand">NETWORKING MODE</div>
   <h1>Today's Event</h1>
@@ -173,7 +185,7 @@ h1 {
 
   </div>
 
-  <div class="menu" id="networkMenu">
+  <div class="menu">
 
     <div class="item active">
       Quick Capture
@@ -187,10 +199,93 @@ h1 {
       Follow Ups
     </div>
 
+    <div class="item">
+      ← Back
+    </div>
+
   </div>
 
-  <div class="back">
-    ESC ← Back
+  <div class="hint">
+    ↑ ↓ Navigate &nbsp; • &nbsp; Pinch to Select
+  </div>
+
+</section>
+
+
+<!-- QUICK CAPTURE -->
+
+<section id="capture" class="hud">
+
+  <div class="brand">QUICK CAPTURE</div>
+  <h1>New Connection</h1>
+
+  <div class="card">
+    <div class="card-title">
+      Capture a Conversation
+    </div>
+
+    <div class="card-text">
+      Fast capture for a new networking connection,
+      opportunity, trigger, and next action.
+    </div>
+
+    <div class="status">
+      CAPTURE ENGINE — NEXT BUILD
+    </div>
+  </div>
+
+  <div class="menu">
+    <div class="item active">← Back</div>
+  </div>
+
+</section>
+
+
+<!-- EVENT NOTES -->
+
+<section id="notes" class="hud">
+
+  <div class="brand">EVENT NOTES</div>
+  <h1>Today's Notes</h1>
+
+  <div class="card">
+    <div class="card-title">
+      Event Intelligence
+    </div>
+
+    <div class="card-text">
+      Notes, observations, introductions and opportunities
+      from today's networking event will live here.
+    </div>
+  </div>
+
+  <div class="menu">
+    <div class="item active">← Back</div>
+  </div>
+
+</section>
+
+
+<!-- FOLLOW UPS -->
+
+<section id="followups" class="hud">
+
+  <div class="brand">FOLLOW UPS</div>
+  <h1>Next Actions</h1>
+
+  <div class="card">
+    <div class="card-title">
+      No Follow Ups Yet
+    </div>
+
+    <div class="card-text">
+      Connections requiring a call, email, introduction
+      or meeting will appear here.
+    </div>
+  </div>
+
+  <div class="menu">
+    <div class="item active">← Back</div>
   </div>
 
 </section>
@@ -198,81 +293,194 @@ h1 {
 
 <script>
 
-const mainItems = document.querySelectorAll("#mainMenu .item");
+const screens = {
+  home: document.getElementById("home"),
+  networking: document.getElementById("networking"),
+  capture: document.getElementById("capture"),
+  notes: document.getElementById("notes"),
+  followups: document.getElementById("followups")
+};
 
+let currentScreen = "home";
 let selected = 0;
+
+
+/* Which screen should Back return to? */
+
+const parents = {
+  networking: "home",
+  capture: "networking",
+  notes: "networking",
+  followups: "networking"
+};
+
+
+/* Show a screen */
+
+function showScreen(name) {
+
+  Object.values(screens).forEach(screen => {
+    screen.classList.remove("active-screen");
+  });
+
+  screens[name].classList.add("active-screen");
+
+  currentScreen = name;
+  selected = 0;
+
+  updateSelection();
+}
+
+
+/* Get selectable items on current screen */
+
+function getItems() {
+
+  return screens[currentScreen]
+    .querySelectorAll(".item");
+}
+
+
+/* Update highlighted item */
 
 function updateSelection() {
 
-  mainItems.forEach(item => {
+  const items = getItems();
+
+  items.forEach(item => {
     item.classList.remove("active");
   });
 
-  mainItems[selected].classList.add("active");
+  if (items.length > 0) {
+    items[selected].classList.add("active");
+  }
 }
+
+
+/* Go back one level */
+
+function goBack() {
+
+  if (parents[currentScreen]) {
+    showScreen(parents[currentScreen]);
+    return true;
+  }
+
+  return false;
+}
+
+
+/* Select highlighted option */
+
+function selectItem() {
+
+  if (currentScreen === "home") {
+
+    if (selected === 0) {
+      showScreen("networking");
+    }
+
+    return;
+  }
+
+
+  if (currentScreen === "networking") {
+
+    if (selected === 0) {
+      showScreen("capture");
+    }
+
+    else if (selected === 1) {
+      showScreen("notes");
+    }
+
+    else if (selected === 2) {
+      showScreen("followups");
+    }
+
+    else if (selected === 3) {
+      showScreen("home");
+    }
+
+    return;
+  }
+
+
+  if (
+    currentScreen === "capture" ||
+    currentScreen === "notes" ||
+    currentScreen === "followups"
+  ) {
+
+    showScreen("networking");
+  }
+}
+
+
+/* Keyboard + wearable translated input */
 
 document.addEventListener("keydown", function(event) {
 
-  if (
-    document
-      .getElementById("home")
-      .classList
-      .contains("active-screen")
-  ) {
+  const items = getItems();
 
-    if (event.key === "ArrowDown") {
+  if (event.key === "ArrowDown") {
 
-      selected++;
+    event.preventDefault();
 
-      if (selected >= mainItems.length) {
-        selected = 0;
-      }
+    selected++;
 
-      updateSelection();
+    if (selected >= items.length) {
+      selected = 0;
     }
 
-    if (event.key === "ArrowUp") {
+    updateSelection();
+  }
 
-      selected--;
 
-      if (selected < 0) {
-        selected = mainItems.length - 1;
-      }
+  else if (event.key === "ArrowUp") {
 
-      updateSelection();
+    event.preventDefault();
+
+    selected--;
+
+    if (selected < 0) {
+      selected = items.length - 1;
     }
 
-    if (event.key === "Enter" && selected === 0) {
+    updateSelection();
+  }
 
-      document
-        .getElementById("home")
-        .classList
-        .remove("active-screen");
 
-      document
-        .getElementById("networking")
-        .classList
-        .add("active-screen");
+  else if (event.key === "Enter") {
+
+    event.preventDefault();
+
+    selectItem();
+  }
+
+
+  else if (event.key === "Escape") {
+
+    /*
+      Only consume Escape when there is
+      somewhere inside the app to go back to.
+    */
+
+    if (currentScreen !== "home") {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      goBack();
     }
   }
 
-  else {
+}, true);
 
-    if (event.key === "Escape") {
 
-      document
-        .getElementById("networking")
-        .classList
-        .remove("active-screen");
+/* Initialize */
 
-      document
-        .getElementById("home")
-        .classList
-        .add("active-screen");
-    }
-  }
-
-});
+updateSelection();
 
 </script>
 
