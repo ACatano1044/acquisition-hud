@@ -6,9 +6,7 @@
 <title>Acquisition HUD</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -27,42 +25,39 @@ body {
   padding: 28px;
 }
 
-.hud.active-screen {
-  display: flex;
-}
+.hud.active-screen { display: flex; }
 
 .brand {
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 3px;
   opacity: .45;
   margin-bottom: 8px;
 }
 
 h1 {
-  margin: 0 0 22px 0;
-  font-size: 30px;
+  margin: 0 0 16px;
+  font-size: 29px;
   font-weight: 600;
 }
 
-.event {
-  font-size: 15px;
-  opacity: .7;
-  margin-top: -14px;
-  margin-bottom: 20px;
+.subtitle {
+  font-size: 13px;
+  opacity: .55;
+  margin-top: -8px;
+  margin-bottom: 17px;
 }
 
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .item {
-  padding: 12px 16px;
+  padding: 9px 14px;
   border-radius: 10px;
-  font-size: 20px;
+  font-size: 18px;
   opacity: .42;
-  transition: .15s ease;
 }
 
 .item.active {
@@ -71,61 +66,102 @@ h1 {
 }
 
 .hint {
-  margin-top: 22px;
-  font-size: 12px;
+  margin-top: 16px;
+  font-size: 11px;
   opacity: .4;
 }
 
 .stats {
   display: flex;
-  gap: 12px;
-  margin-bottom: 22px;
+  gap: 9px;
+  margin-bottom: 17px;
 }
 
 .stat {
   flex: 1;
-  padding: 14px 10px;
+  padding: 11px 7px;
   background: rgba(255,255,255,.08);
   border-radius: 10px;
   text-align: center;
 }
 
 .number {
-  font-size: 26px;
+  font-size: 23px;
   font-weight: 600;
 }
 
 .label {
-  margin-top: 4px;
-  font-size: 11px;
+  margin-top: 3px;
+  font-size: 9px;
   opacity: .55;
 }
 
 .card {
-  padding: 18px;
+  padding: 14px;
   border-radius: 12px;
   background: rgba(255,255,255,.08);
-  margin-bottom: 12px;
+  margin-bottom: 11px;
 }
 
-.card-title {
-  font-size: 18px;
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 5px 0;
+  font-size: 13px;
+}
+
+.row-label { opacity: .45; }
+
+.row-value {
+  text-align: right;
+  font-weight: 500;
+}
+
+.success {
+  font-size: 38px;
   margin-bottom: 7px;
 }
 
-.card-text {
-  font-size: 14px;
-  line-height: 1.45;
-  opacity: .6;
+.list-box {
+  max-height: 52vh;
+  overflow: hidden;
+  margin-bottom: 10px;
 }
 
-.status {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 20px;
+.entry {
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.entry:last-child {
+  border-bottom: none;
+}
+
+.entry-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.entry-detail {
   font-size: 11px;
+  line-height: 1.4;
+  opacity: .55;
+}
+
+.empty {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: .55;
+}
+
+.warning {
+  font-size: 12px;
+  line-height: 1.45;
   opacity: .6;
 }
 </style>
@@ -136,7 +172,6 @@ h1 {
 <!-- HOME -->
 
 <section id="home" class="hud active-screen">
-
   <div class="brand">A-D</div>
   <h1>Acquisition HUD</h1>
 
@@ -148,174 +183,538 @@ h1 {
     <div class="item">Dashboard</div>
   </div>
 
-  <div class="hint">
-    ↑ ↓ Navigate &nbsp; • &nbsp; Pinch to Select
-  </div>
-
+  <div class="hint">↑ ↓ Navigate • Pinch to Select</div>
 </section>
 
 
-<!-- NETWORKING -->
+<!-- NETWORKING HOME -->
 
 <section id="networking" class="hud">
+  <div class="brand">NETWORKING</div>
+  <h1>Event Hub</h1>
 
-  <div class="brand">NETWORKING MODE</div>
-  <h1>Today's Event</h1>
-
-  <div class="event">
-    Montgomery County Hispanic Chamber
+  <div class="menu">
+    <div class="item active">Start New Event</div>
+    <div class="item">Recent Events</div>
+    <div class="item">All Follow Ups</div>
+    <div class="item">← Back</div>
   </div>
+
+  <div class="hint">↑ ↓ Navigate • Pinch to Select</div>
+</section>
+
+
+<!-- ACTIVE EVENT -->
+
+<section id="event" class="hud">
+  <div class="brand">ACTIVE EVENT</div>
+  <h1 id="eventTitle">Event</h1>
+  <div id="eventTime" class="subtitle"></div>
 
   <div class="stats">
 
     <div class="stat">
-      <div class="number">5</div>
-      <div class="label">CONVERSATIONS</div>
+      <div id="eventCaptureCount" class="number">0</div>
+      <div class="label">CAPTURES</div>
     </div>
 
     <div class="stat">
-      <div class="number">2</div>
-      <div class="label">COI CONNECTIONS</div>
+      <div id="eventCoiCount" class="number">0</div>
+      <div class="label">COI</div>
     </div>
 
     <div class="stat">
-      <div class="number">1</div>
-      <div class="label">MEETING</div>
+      <div id="eventMeetingCount" class="number">0</div>
+      <div class="label">MEETINGS</div>
     </div>
 
   </div>
 
   <div class="menu">
-
-    <div class="item active">
-      Quick Capture
-    </div>
-
-    <div class="item">
-      Event Notes
-    </div>
-
-    <div class="item">
-      Follow Ups
-    </div>
-
-    <div class="item">
-      ← Back
-    </div>
-
+    <div class="item active">Quick Capture</div>
+    <div class="item">Event Follow Ups</div>
+    <div class="item">Event Summary</div>
+    <div class="item">End Event</div>
+    <div class="item">← Event Hub</div>
   </div>
-
-  <div class="hint">
-    ↑ ↓ Navigate &nbsp; • &nbsp; Pinch to Select
-  </div>
-
 </section>
 
 
-<!-- QUICK CAPTURE -->
+<!-- IDENTIFIER -->
 
-<section id="capture" class="hud">
-
+<section id="identifier" class="hud">
   <div class="brand">QUICK CAPTURE</div>
-  <h1>New Connection</h1>
-
-  <div class="card">
-    <div class="card-title">
-      Capture a Conversation
-    </div>
-
-    <div class="card-text">
-      Fast capture for a new networking connection,
-      opportunity, trigger, and next action.
-    </div>
-
-    <div class="status">
-      CAPTURE ENGINE — NEXT BUILD
-    </div>
-  </div>
+  <h1>Quick Identifier</h1>
+  <div class="subtitle">Who did you just speak with?</div>
 
   <div class="menu">
-    <div class="item active">← Back</div>
+    <div class="item active">Man</div>
+    <div class="item">Woman</div>
+    <div class="item">Skip</div>
+    <div class="item">← Back</div>
   </div>
-
 </section>
 
 
-<!-- EVENT NOTES -->
+<!-- RELATIONSHIP -->
 
-<section id="notes" class="hud">
-
-  <div class="brand">EVENT NOTES</div>
-  <h1>Today's Notes</h1>
-
-  <div class="card">
-    <div class="card-title">
-      Event Intelligence
-    </div>
-
-    <div class="card-text">
-      Notes, observations, introductions and opportunities
-      from today's networking event will live here.
-    </div>
-  </div>
+<section id="relationship" class="hud">
+  <div class="brand">QUICK CAPTURE</div>
+  <h1>Relationship</h1>
+  <div class="subtitle">What type of connection?</div>
 
   <div class="menu">
-    <div class="item active">← Back</div>
+    <div class="item active">Prospect</div>
+    <div class="item">COI</div>
+    <div class="item">Existing Relationship</div>
+    <div class="item">Other</div>
+    <div class="item">← Back</div>
   </div>
-
 </section>
 
 
-<!-- FOLLOW UPS -->
+<!-- OPPORTUNITY -->
 
-<section id="followups" class="hud">
+<section id="opportunity" class="hud">
+  <div class="brand">QUICK CAPTURE</div>
+  <h1>Opportunity</h1>
+  <div class="subtitle">Primary opportunity?</div>
 
-  <div class="brand">FOLLOW UPS</div>
-  <h1>Next Actions</h1>
+  <div class="menu">
+    <div class="item active">Deposits / Treasury</div>
+    <div class="item">Credit</div>
+    <div class="item">Both</div>
+    <div class="item">Referral / COI</div>
+    <div class="item">Unknown</div>
+    <div class="item">← Back</div>
+  </div>
+</section>
+
+
+<!-- ACTION -->
+
+<section id="action" class="hud">
+  <div class="brand">QUICK CAPTURE</div>
+  <h1>Next Action</h1>
+  <div class="subtitle">What needs to happen next?</div>
+
+  <div class="menu">
+    <div class="item active">Call</div>
+    <div class="item">Email</div>
+    <div class="item">Schedule Meeting</div>
+    <div class="item">Send Introduction</div>
+    <div class="item">Research</div>
+    <div class="item">No Action</div>
+    <div class="item">← Back</div>
+  </div>
+</section>
+
+
+<!-- REVIEW -->
+
+<section id="review" class="hud">
+  <div class="brand">QUICK CAPTURE</div>
+  <h1>Review</h1>
 
   <div class="card">
-    <div class="card-title">
-      No Follow Ups Yet
+
+    <div class="row">
+      <span class="row-label">Identifier</span>
+      <span id="reviewIdentifier" class="row-value"></span>
     </div>
 
-    <div class="card-text">
-      Connections requiring a call, email, introduction
-      or meeting will appear here.
+    <div class="row">
+      <span class="row-label">Relationship</span>
+      <span id="reviewRelationship" class="row-value"></span>
     </div>
+
+    <div class="row">
+      <span class="row-label">Opportunity</span>
+      <span id="reviewOpportunity" class="row-value"></span>
+    </div>
+
+    <div class="row">
+      <span class="row-label">Next Action</span>
+      <span id="reviewAction" class="row-value"></span>
+    </div>
+
   </div>
+
+  <div class="menu">
+    <div class="item active">Save Connection</div>
+    <div class="item">← Back</div>
+  </div>
+</section>
+
+
+<!-- SAVED -->
+
+<section id="saved" class="hud">
+  <div class="brand">ACQUISITION HUD</div>
+  <div class="success">✓</div>
+
+  <h1 id="savedTitle">Connection Saved</h1>
+  <div id="savedDetails" class="subtitle"></div>
+
+  <div class="menu">
+    <div class="item active">New Capture</div>
+    <div class="item">Active Event</div>
+    <div class="item">Event Follow Ups</div>
+  </div>
+</section>
+
+
+<!-- EVENT FOLLOW UPS -->
+
+<section id="eventFollowups" class="hud">
+  <div class="brand">EVENT FOLLOW UPS</div>
+  <h1 id="eventFollowupTitle">Captures</h1>
+
+  <div id="eventFollowupList" class="card list-box"></div>
 
   <div class="menu">
     <div class="item active">← Back</div>
   </div>
+</section>
 
+
+<!-- ALL FOLLOW UPS -->
+
+<section id="allFollowups" class="hud">
+  <div class="brand">ALL FOLLOW UPS</div>
+  <h1>Across Events</h1>
+
+  <div id="allFollowupList" class="card list-box"></div>
+
+  <div class="menu">
+    <div class="item active">← Event Hub</div>
+  </div>
+</section>
+
+
+<!-- EVENT SUMMARY -->
+
+<section id="summary" class="hud">
+  <div class="brand">EVENT SUMMARY</div>
+  <h1 id="summaryTitle">Event</h1>
+
+  <div class="card">
+
+    <div class="row">
+      <span class="row-label">Captures</span>
+      <span id="summaryCaptures" class="row-value">0</span>
+    </div>
+
+    <div class="row">
+      <span class="row-label">Prospects</span>
+      <span id="summaryProspects" class="row-value">0</span>
+    </div>
+
+    <div class="row">
+      <span class="row-label">COIs</span>
+      <span id="summaryCoi" class="row-value">0</span>
+    </div>
+
+    <div class="row">
+      <span class="row-label">Meetings</span>
+      <span id="summaryMeetings" class="row-value">0</span>
+    </div>
+
+    <div class="row">
+      <span class="row-label">Started</span>
+      <span id="summaryStarted" class="row-value"></span>
+    </div>
+
+    <div class="row">
+      <span class="row-label">Ended</span>
+      <span id="summaryEnded" class="row-value">Active</span>
+    </div>
+
+  </div>
+
+  <div class="menu">
+    <div class="item active">View Captures</div>
+    <div class="item">← Back</div>
+  </div>
+</section>
+
+
+<!-- END EVENT -->
+
+<section id="endEvent" class="hud">
+  <div class="brand">END EVENT</div>
+  <h1>Finish Event?</h1>
+
+  <div class="warning">
+    This will close the active event and save its ending time.
+    Your captures will remain available in Recent Events.
+  </div>
+
+  <div class="menu" style="margin-top:16px;">
+    <div class="item active">End & Save Event</div>
+    <div class="item">Keep Event Open</div>
+  </div>
+</section>
+
+
+<!-- EVENT COMPLETE -->
+
+<section id="complete" class="hud">
+  <div class="brand">EVENT COMPLETE</div>
+  <div class="success">✓</div>
+
+  <h1 id="completeTitle">Event Saved</h1>
+  <div id="completeDetails" class="subtitle"></div>
+
+  <div class="menu">
+    <div class="item active">View Summary</div>
+    <div class="item">Event Hub</div>
+  </div>
+</section>
+
+
+<!-- RECENT EVENTS -->
+
+<section id="recentEvents" class="hud">
+  <div class="brand">NETWORKING HISTORY</div>
+  <h1>Recent Events</h1>
+
+  <div id="recentEventMenu" class="menu"></div>
 </section>
 
 
 <script>
 
-const screens = {
-  home: document.getElementById("home"),
-  networking: document.getElementById("networking"),
-  capture: document.getElementById("capture"),
-  notes: document.getElementById("notes"),
-  followups: document.getElementById("followups")
-};
+/* ---------------- STATE ---------------- */
+
+const screenNames = [
+  "home",
+  "networking",
+  "event",
+  "identifier",
+  "relationship",
+  "opportunity",
+  "action",
+  "review",
+  "saved",
+  "eventFollowups",
+  "allFollowups",
+  "summary",
+  "endEvent",
+  "complete",
+  "recentEvents"
+];
+
+const screens = {};
+
+screenNames.forEach(name => {
+  screens[name] = document.getElementById(name);
+});
 
 let currentScreen = "home";
 let selected = 0;
+let activeEventId = null;
+let viewedEventId = null;
 
-
-/* Which screen should Back return to? */
-
-const parents = {
-  networking: "home",
-  capture: "networking",
-  notes: "networking",
-  followups: "networking"
+let capture = {
+  identifier: "",
+  relationship: "",
+  opportunity: "",
+  action: ""
 };
 
 
-/* Show a screen */
+/* ---------------- STORAGE ---------------- */
+
+function getEvents() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("acquisitionEvents") || "[]"
+    );
+  } catch {
+    return [];
+  }
+}
+
+function setEvents(events) {
+  localStorage.setItem(
+    "acquisitionEvents",
+    JSON.stringify(events)
+  );
+}
+
+
+/* ---------------- TIME ---------------- */
+
+function formatTime(value) {
+
+  if (!value) return "—";
+
+  return new Date(value).toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function formatDate(value) {
+
+  if (!value) return "—";
+
+  return new Date(value).toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+
+/* ---------------- EVENTS ---------------- */
+
+function startNewEvent() {
+
+  const events = getEvents();
+
+  const event = {
+    id: Date.now(),
+    number: events.length + 1,
+    started: new Date().toISOString(),
+    ended: null,
+    captures: []
+  };
+
+  events.push(event);
+  setEvents(events);
+
+  activeEventId = event.id;
+  viewedEventId = event.id;
+
+  updateEventScreen();
+  showScreen("event");
+}
+
+
+function getEventById(id) {
+
+  return getEvents().find(event =>
+    event.id === id
+  );
+}
+
+
+function updateEventScreen() {
+
+  const event = getEventById(activeEventId);
+
+  if (!event) return;
+
+  document.getElementById("eventTitle")
+    .textContent = "Event #" + event.number;
+
+  document.getElementById("eventTime")
+    .textContent =
+      formatDate(event.started) +
+      " • Started " +
+      formatTime(event.started);
+
+  document.getElementById("eventCaptureCount")
+    .textContent = event.captures.length;
+
+  document.getElementById("eventCoiCount")
+    .textContent =
+      event.captures.filter(
+        item => item.relationship === "COI"
+      ).length;
+
+  document.getElementById("eventMeetingCount")
+    .textContent =
+      event.captures.filter(
+        item => item.action === "Schedule Meeting"
+      ).length;
+}
+
+
+function endCurrentEvent() {
+
+  const events = getEvents();
+
+  const index = events.findIndex(
+    event => event.id === activeEventId
+  );
+
+  if (index === -1) return;
+
+  events[index].ended =
+    new Date().toISOString();
+
+  setEvents(events);
+
+  viewedEventId = activeEventId;
+
+  const finished = events[index];
+
+  document.getElementById("completeTitle")
+    .textContent =
+      "Event #" + finished.number + " Saved";
+
+  document.getElementById("completeDetails")
+    .textContent =
+      finished.captures.length +
+      " captures • " +
+      formatTime(finished.started) +
+      " – " +
+      formatTime(finished.ended);
+
+  activeEventId = null;
+
+  showScreen("complete");
+}
+
+
+/* ---------------- CAPTURES ---------------- */
+
+function saveCapture() {
+
+  const events = getEvents();
+
+  const index = events.findIndex(
+    event => event.id === activeEventId
+  );
+
+  if (index === -1) return;
+
+  const event = events[index];
+
+  const newCapture = {
+    number: event.captures.length + 1,
+    identifier: capture.identifier,
+    relationship: capture.relationship,
+    opportunity: capture.opportunity,
+    action: capture.action,
+    created: new Date().toISOString()
+  };
+
+  event.captures.push(newCapture);
+
+  setEvents(events);
+
+  document.getElementById("savedTitle")
+    .textContent =
+      "Capture #" + newCapture.number + " Saved";
+
+  document.getElementById("savedDetails")
+    .textContent =
+      "Event #" +
+      event.number +
+      " • " +
+      newCapture.identifier +
+      " • " +
+      formatTime(newCapture.created);
+
+  updateEventScreen();
+}
+
+
+/* ---------------- DISPLAY ---------------- */
 
 function showScreen(name) {
 
@@ -328,11 +727,33 @@ function showScreen(name) {
   currentScreen = name;
   selected = 0;
 
+  if (name === "event") {
+    updateEventScreen();
+  }
+
+  if (name === "review") {
+    updateReview();
+  }
+
+  if (name === "eventFollowups") {
+    renderEventCaptures(viewedEventId);
+  }
+
+  if (name === "allFollowups") {
+    renderAllFollowups();
+  }
+
+  if (name === "summary") {
+    renderSummary(viewedEventId);
+  }
+
+  if (name === "recentEvents") {
+    renderRecentEvents();
+  }
+
   updateSelection();
 }
 
-
-/* Get selectable items on current screen */
 
 function getItems() {
 
@@ -340,8 +761,6 @@ function getItems() {
     .querySelectorAll(".item");
 }
 
-
-/* Update highlighted item */
 
 function updateSelection() {
 
@@ -357,22 +776,225 @@ function updateSelection() {
 }
 
 
-/* Go back one level */
+/* ---------------- REVIEW ---------------- */
 
-function goBack() {
+function updateReview() {
 
-  if (parents[currentScreen]) {
-    showScreen(parents[currentScreen]);
-    return true;
-  }
+  document.getElementById("reviewIdentifier")
+    .textContent = capture.identifier;
 
-  return false;
+  document.getElementById("reviewRelationship")
+    .textContent = capture.relationship;
+
+  document.getElementById("reviewOpportunity")
+    .textContent = capture.opportunity;
+
+  document.getElementById("reviewAction")
+    .textContent = capture.action;
 }
 
 
-/* Select highlighted option */
+/* ---------------- EVENT CAPTURES ---------------- */
+
+function renderEventCaptures(eventId) {
+
+  const event = getEventById(eventId);
+  const container =
+    document.getElementById("eventFollowupList");
+
+  if (!event) {
+
+    container.innerHTML =
+      '<div class="empty">Event not found.</div>';
+
+    return;
+  }
+
+  document.getElementById("eventFollowupTitle")
+    .textContent =
+      "Event #" + event.number + " Captures";
+
+  if (event.captures.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">No captures yet.</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    event.captures.map(item => `
+      <div class="entry">
+
+        <div class="entry-title">
+          <span>#${item.number} • ${item.identifier}</span>
+          <span>${formatTime(item.created)}</span>
+        </div>
+
+        <div class="entry-detail">
+          ${item.relationship} • ${item.opportunity}
+          <br>
+          Next: ${item.action}
+        </div>
+
+      </div>
+    `).join("");
+}
+
+
+/* ---------------- ALL FOLLOW UPS ---------------- */
+
+function renderAllFollowups() {
+
+  const events = getEvents();
+  const container =
+    document.getElementById("allFollowupList");
+
+  const rows = [];
+
+  events.slice().reverse().forEach(event => {
+
+    event.captures.forEach(item => {
+
+      if (item.action !== "No Action") {
+
+        rows.push(`
+          <div class="entry">
+
+            <div class="entry-title">
+              <span>
+                E${event.number} • #${item.number} •
+                ${item.identifier}
+              </span>
+
+              <span>
+                ${formatDate(item.created)}
+              </span>
+            </div>
+
+            <div class="entry-detail">
+              ${item.relationship} • ${item.opportunity}
+              <br>
+              Next: ${item.action} •
+              ${formatTime(item.created)}
+            </div>
+
+          </div>
+        `);
+      }
+    });
+  });
+
+  container.innerHTML =
+    rows.length
+      ? rows.join("")
+      : '<div class="empty">No follow ups yet.</div>';
+}
+
+
+/* ---------------- SUMMARY ---------------- */
+
+function renderSummary(eventId) {
+
+  const event = getEventById(eventId);
+
+  if (!event) return;
+
+  const prospects =
+    event.captures.filter(
+      item => item.relationship === "Prospect"
+    ).length;
+
+  const coi =
+    event.captures.filter(
+      item => item.relationship === "COI"
+    ).length;
+
+  const meetings =
+    event.captures.filter(
+      item => item.action === "Schedule Meeting"
+    ).length;
+
+  document.getElementById("summaryTitle")
+    .textContent =
+      "Event #" + event.number;
+
+  document.getElementById("summaryCaptures")
+    .textContent =
+      event.captures.length;
+
+  document.getElementById("summaryProspects")
+    .textContent = prospects;
+
+  document.getElementById("summaryCoi")
+    .textContent = coi;
+
+  document.getElementById("summaryMeetings")
+    .textContent = meetings;
+
+  document.getElementById("summaryStarted")
+    .textContent =
+      formatTime(event.started);
+
+  document.getElementById("summaryEnded")
+    .textContent =
+      event.ended
+        ? formatTime(event.ended)
+        : "Active";
+}
+
+
+/* ---------------- RECENT EVENTS ---------------- */
+
+function renderRecentEvents() {
+
+  const events = getEvents();
+  const menu =
+    document.getElementById("recentEventMenu");
+
+  if (events.length === 0) {
+
+    menu.innerHTML = `
+      <div class="empty">
+        No networking events saved yet.
+      </div>
+      <div class="item active">← Event Hub</div>
+    `;
+
+    return;
+  }
+
+  const recent =
+    events.slice().reverse().slice(0, 6);
+
+  menu.innerHTML =
+    recent.map(event => `
+      <div
+        class="item event-choice"
+        data-event-id="${event.id}"
+      >
+        ${formatDate(event.started)}
+        • Event #${event.number}
+        • ${event.captures.length} Captures
+      </div>
+    `).join("") +
+    '<div class="item">← Event Hub</div>';
+}
+
+
+/* ---------------- SELECTION ---------------- */
 
 function selectItem() {
+
+  const items = getItems();
+
+  if (items.length === 0) return;
+
+  const choice =
+    items[selected].textContent.trim();
+
+
+  /* HOME */
 
   if (currentScreen === "home") {
 
@@ -384,18 +1006,20 @@ function selectItem() {
   }
 
 
+  /* EVENT HUB */
+
   if (currentScreen === "networking") {
 
     if (selected === 0) {
-      showScreen("capture");
+      startNewEvent();
     }
 
     else if (selected === 1) {
-      showScreen("notes");
+      showScreen("recentEvents");
     }
 
     else if (selected === 2) {
-      showScreen("followups");
+      showScreen("allFollowups");
     }
 
     else if (selected === 3) {
@@ -406,79 +1030,304 @@ function selectItem() {
   }
 
 
-  if (
-    currentScreen === "capture" ||
-    currentScreen === "notes" ||
-    currentScreen === "followups"
-  ) {
+  /* ACTIVE EVENT */
 
+  if (currentScreen === "event") {
+
+    if (selected === 0) {
+      showScreen("identifier");
+    }
+
+    else if (selected === 1) {
+      viewedEventId = activeEventId;
+      showScreen("eventFollowups");
+    }
+
+    else if (selected === 2) {
+      viewedEventId = activeEventId;
+      showScreen("summary");
+    }
+
+    else if (selected === 3) {
+      showScreen("endEvent");
+    }
+
+    else if (selected === 4) {
+      showScreen("networking");
+    }
+
+    return;
+  }
+
+
+  /* IDENTIFIER */
+
+  if (currentScreen === "identifier") {
+
+    if (selected === 3) {
+      showScreen("event");
+      return;
+    }
+
+    capture.identifier =
+      choice === "Skip"
+        ? "Unknown"
+        : choice;
+
+    showScreen("relationship");
+
+    return;
+  }
+
+
+  /* RELATIONSHIP */
+
+  if (currentScreen === "relationship") {
+
+    if (selected === 4) {
+      showScreen("identifier");
+      return;
+    }
+
+    capture.relationship = choice;
+    showScreen("opportunity");
+
+    return;
+  }
+
+
+  /* OPPORTUNITY */
+
+  if (currentScreen === "opportunity") {
+
+    if (selected === 5) {
+      showScreen("relationship");
+      return;
+    }
+
+    capture.opportunity = choice;
+    showScreen("action");
+
+    return;
+  }
+
+
+  /* ACTION */
+
+  if (currentScreen === "action") {
+
+    if (selected === 6) {
+      showScreen("opportunity");
+      return;
+    }
+
+    capture.action = choice;
+    showScreen("review");
+
+    return;
+  }
+
+
+  /* REVIEW */
+
+  if (currentScreen === "review") {
+
+    if (selected === 0) {
+
+      saveCapture();
+      showScreen("saved");
+
+      return;
+    }
+
+    if (selected === 1) {
+      showScreen("action");
+    }
+
+    return;
+  }
+
+
+  /* SAVED */
+
+  if (currentScreen === "saved") {
+
+    if (selected === 0) {
+
+      capture = {
+        identifier: "",
+        relationship: "",
+        opportunity: "",
+        action: ""
+      };
+
+      showScreen("identifier");
+    }
+
+    else if (selected === 1) {
+      showScreen("event");
+    }
+
+    else if (selected === 2) {
+      viewedEventId = activeEventId;
+      showScreen("eventFollowups");
+    }
+
+    return;
+  }
+
+
+  /* EVENT FOLLOW UPS */
+
+  if (currentScreen === "eventFollowups") {
+
+    if (activeEventId === viewedEventId) {
+      showScreen("event");
+    } else {
+      showScreen("summary");
+    }
+
+    return;
+  }
+
+
+  /* ALL FOLLOW UPS */
+
+  if (currentScreen === "allFollowups") {
     showScreen("networking");
+    return;
+  }
+
+
+  /* SUMMARY */
+
+  if (currentScreen === "summary") {
+
+    if (selected === 0) {
+      showScreen("eventFollowups");
+    }
+
+    else {
+
+      if (activeEventId === viewedEventId) {
+        showScreen("event");
+      } else {
+        showScreen("recentEvents");
+      }
+    }
+
+    return;
+  }
+
+
+  /* END EVENT */
+
+  if (currentScreen === "endEvent") {
+
+    if (selected === 0) {
+      endCurrentEvent();
+    }
+
+    else {
+      showScreen("event");
+    }
+
+    return;
+  }
+
+
+  /* COMPLETE */
+
+  if (currentScreen === "complete") {
+
+    if (selected === 0) {
+      showScreen("summary");
+    }
+
+    else {
+      showScreen("networking");
+    }
+
+    return;
+  }
+
+
+  /* RECENT EVENTS */
+
+  if (currentScreen === "recentEvents") {
+
+    const selectedItem = items[selected];
+
+    if (
+      selectedItem.classList.contains("event-choice")
+    ) {
+
+      viewedEventId =
+        Number(selectedItem.dataset.eventId);
+
+      showScreen("summary");
+
+    } else {
+
+      showScreen("networking");
+    }
+
+    return;
   }
 }
 
 
-/* Keyboard + wearable translated input */
+/* ---------------- INPUT ---------------- */
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener(
+  "keydown",
+  function(event) {
 
-  const items = getItems();
+    const items = getItems();
 
-  if (event.key === "ArrowDown") {
-
-    event.preventDefault();
-
-    selected++;
-
-    if (selected >= items.length) {
-      selected = 0;
-    }
-
-    updateSelection();
-  }
+    if (items.length === 0) return;
 
 
-  else if (event.key === "ArrowUp") {
-
-    event.preventDefault();
-
-    selected--;
-
-    if (selected < 0) {
-      selected = items.length - 1;
-    }
-
-    updateSelection();
-  }
-
-
-  else if (event.key === "Enter") {
-
-    event.preventDefault();
-
-    selectItem();
-  }
-
-
-  else if (event.key === "Escape") {
-
-    /*
-      Only consume Escape when there is
-      somewhere inside the app to go back to.
-    */
-
-    if (currentScreen !== "home") {
+    if (event.key === "ArrowDown") {
 
       event.preventDefault();
-      event.stopPropagation();
 
-      goBack();
+      selected++;
+
+      if (selected >= items.length) {
+        selected = 0;
+      }
+
+      updateSelection();
     }
-  }
-
-}, true);
 
 
-/* Initialize */
+    else if (event.key === "ArrowUp") {
+
+      event.preventDefault();
+
+      selected--;
+
+      if (selected < 0) {
+        selected = items.length - 1;
+      }
+
+      updateSelection();
+    }
+
+
+    else if (event.key === "Enter") {
+
+      event.preventDefault();
+      selectItem();
+    }
+
+  },
+  true
+);
+
+
+/* ---------------- START ---------------- */
 
 updateSelection();
 
